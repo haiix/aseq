@@ -7,7 +7,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-export const version = '0.1.0'
+export const version = '0.1.1pre'
 
 if (!Symbol.asyncIterator) Symbol.asyncIterator = Symbol('Symbol.asyncIterator')
 
@@ -266,6 +266,8 @@ export class ArrayAsyncIterator {
 export default function aseq (iterator, thisArg = null) {
   if (typeof iterator === 'number') {
     return fromIterator(Array(iterator).keys())
+  } else if (iterator instanceof ArrayAsyncIterator) {
+    return iterator
   } else if (typeof iterator === 'function' && iterator.constructor && iterator.constructor.name === 'AsyncGeneratorFunction') {
     return new ArrayAsyncIterator(iterator())
   } else if (iterator[Symbol.asyncIterator]) {
