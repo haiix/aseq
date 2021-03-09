@@ -1,6 +1,6 @@
 {
   "name": "@haiix/aseq",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A JavaScript module that allows asynchronous iterators to use array-like methods.",
   "main": "aseq.mjs",
   "repository": "https://github.com/haiix/aseq.git",

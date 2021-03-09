@@ -7,7 +7,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-export const version = '0.1.1pre'
+export const version = '0.1.1'
 
 if (!Symbol.asyncIterator) Symbol.asyncIterator = Symbol('Symbol.asyncIterator')
 
