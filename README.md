@@ -13,7 +13,7 @@ npm install @haiix/aseq
 ## Usage
 
 ```javascript
-import aseq, * as aseqUtil from '@haiix/aseq'
+import aseq from '@haiix/aseq'
 ```
 
 ## Examples
@@ -32,15 +32,22 @@ import aseq, * as aseqUtil from '@haiix/aseq'
 2.  You can pass an async iterable object (with the [Symbol.asyncIterator] method) to the aseq function.
 
     ```javascript
-    await aseq([10, 20, 30]).map(x => x + 1).join() // "11,21,31"
+    async function* myFunc () {
+      for (let n = 10; n <= 30; n += 10) {
+        await new Promise(resolve => setTimeout(resolve, 100))
+        yield n
+      }
+    }
+    await aseq(myFunc()).map(x => x + 1).join() // "11,21,31"
     ```
 
 3.  There are no methods implemented that rewrite themselves.
     If you want to use those methods, convert them to arrays once.
+    You can use the toArray method for that.
 
     ```javascript
     //aseq(5).reverse() // Error
-    (await aseqUtil.toArray(aseq(5))).reverse() // [4, 3, 2, 1, 0]
+    (await aseq(5).toArray()).reverse() // [4, 3, 2, 1, 0]
     ```
 
 4.  In this example, the value is returned when the result of indexOf is found, without waiting for the original processing to finish.

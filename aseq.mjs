@@ -7,7 +7,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-export const version = '0.1.1'
+export const version = '0.1.2'
 
 if (!Symbol.asyncIterator) Symbol.asyncIterator = Symbol('Symbol.asyncIterator')
 
@@ -245,6 +245,10 @@ export class ArrayAsyncIterator {
     return this.map(callbackfn, thisArg).map(v => !!v).includes(true)
   }
 
+  toArray () {
+    return toArray(this)
+  }
+
   values () {
     return new ArrayAsyncIterator(this._ite)
   }
@@ -274,7 +278,7 @@ export default function aseq (iterator, thisArg = null) {
     return new ArrayAsyncIterator(iterator)
   } else if (iterator[Symbol.iterator]) {
     return fromIterator(iterator)
-  } else if (typeof iterator === 'function' && iterator.constructor && iterator.constructor.name === 'AsyncFunction') {
+  } else if (typeof iterator === 'function') {
     return _agen(iterator, thisArg)
   } else {
     throw new TypeError('The given argument is not a number, iterator, async iterator or async function.')

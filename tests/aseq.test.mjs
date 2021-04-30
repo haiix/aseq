@@ -25,6 +25,16 @@ describe('aseq function', () => {
     expect(aite[Symbol.asyncIterator]).to.be.a('function')
     expect(await aseqUtil.toArray(aite)).to.deep.equal([10, 20, 30])
   })
+  it('From async function', async function () {
+    const aite = aseq(async function (_yield) {
+      for (let i = 2; i < 5; i++) {
+        _yield(i)
+      }
+    })
+    expect(aite).to.be.an('object')
+    expect(aite[Symbol.asyncIterator]).to.be.a('function')
+    expect(await aseqUtil.toArray(aite)).to.deep.equal([2, 3, 4])
+  })
   it('Errors', async function () {
     expect(() => { aseq(false) }).throw(Error)
   })
@@ -248,6 +258,11 @@ describe('ArrayAsyncIterator methods', () => {
     const res11 = await aseqUtil.toArray(aseq([10, 20, 30]).values())
     const res12 = Array.from([10, 20, 30].values())
     expect(aite).to.be.an.instanceof(ArrayAsyncIterator)
+    expect(res11).to.deep.equal(res12)
+  })
+  it('toArray', async function () {
+    const res11 = await aseq([3, 4, 5]).toArray()
+    const res12 = [3, 4, 5]
     expect(res11).to.deep.equal(res12)
   })
 })
