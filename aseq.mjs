@@ -7,9 +7,10 @@
  * https://opensource.org/licenses/MIT
  */
 
-export const version = '0.1.2'
+export const version = '0.1.3beta'
 
-if (!Symbol.asyncIterator) Symbol.asyncIterator = Symbol('Symbol.asyncIterator')
+const symbolAsyncIterator = Symbol.hasOwnProperty('asyncIterator') ? Symbol.asyncIterator : Symbol('Symbol.asyncIterator')
+const AsyncFunction = (async function () {}).constructor
 
 export class AsyncDispatcher {
   constructor () {
@@ -60,7 +61,7 @@ export class AsyncDispatcher {
     }
   }
 
-  [Symbol.asyncIterator] () {
+  [symbolAsyncIterator] () {
     return this
   }
 }
@@ -80,7 +81,7 @@ function _agen (callbackfn, thisArg = null) {
 
 export function q (_ite) {
   return {
-    _ite: _ite[Symbol.asyncIterator](),
+    _ite: _ite[symbolAsyncIterator](),
     value: null,
     async next () {
       const { done, value } = await this._ite.next()
@@ -103,7 +104,7 @@ export function fromIterator (iterator) {
     async next () {
       return this._ite.next()
     },
-    [Symbol.asyncIterator] () {
+    [symbolAsyncIterator] () {
       return this
     }
   })
@@ -159,7 +160,7 @@ export class ArrayAsyncIterator {
       await (async function recur (asyncIterator, depth) {
         const aite = q(asyncIterator)
         while (await aite.next()) {
-          if (depth > 0 && aite.value != null && aite.value[Symbol.asyncIterator]) {
+          if (depth > 0 && aite.value != null && aite.value[symbolAsyncIterator]) {
             await recur(aite.value, depth - 1)
           } else if (depth > 0 && aite.value != null && aite.value[Symbol.iterator]) {
             await recur(fromIterator(aite.value), depth - 1)
@@ -262,7 +263,7 @@ export class ArrayAsyncIterator {
     return this._ite.next()
   }
 
-  [Symbol.asyncIterator] () {
+  [symbolAsyncIterator] () {
     return this._ite
   }
 }
@@ -274,11 +275,11 @@ export default function aseq (iterator, thisArg = null) {
     return iterator
   } else if (typeof iterator === 'function' && iterator.constructor && iterator.constructor.name === 'AsyncGeneratorFunction') {
     return new ArrayAsyncIterator(iterator())
-  } else if (iterator[Symbol.asyncIterator]) {
+  } else if (iterator[symbolAsyncIterator]) {
     return new ArrayAsyncIterator(iterator)
   } else if (iterator[Symbol.iterator]) {
     return fromIterator(iterator)
-  } else if (typeof iterator === 'function') {
+  } else if (typeof iterator === 'function' && iterator.constructor === AsyncFunction) {
     return _agen(iterator, thisArg)
   } else {
     throw new TypeError('The given argument is not a number, iterator, async iterator or async function.')

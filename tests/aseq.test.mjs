@@ -6,6 +6,8 @@
 import aseq, * as aseqUtil from '../aseq.mjs'
 const expect = chai.expect
 
+if (!Symbol.asyncIterator) Symbol.asyncIterator = Symbol('Symbol.asyncIterator')
+
 describe('aseq function', () => {
   it('From integer', async function () {
     const aite = aseq(3)
